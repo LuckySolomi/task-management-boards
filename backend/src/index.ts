@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import dns from "node:dns";
+import boardsRoutes from "./routes/boards.routes";
+import cardsRoutes from "./routes/cards.routes";
 
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
@@ -17,6 +19,9 @@ app.use(express.json());
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
+
+app.use("/boards", boardsRoutes);
+app.use("/cards", cardsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
