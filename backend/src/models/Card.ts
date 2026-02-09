@@ -5,6 +5,7 @@ const CardSchema = new Schema({
   column: {
     type: String,
     enum: ["todo", "inprogress", "done"],
+    required: true,
   },
   title: { type: String, required: true },
   description: { type: String, default: "" },
