@@ -5,6 +5,7 @@ interface Card {
   id: string;
   title: string;
   description?: string;
+  status: "todo" | "inprogress" | "done";
 }
 
 interface Column {
@@ -37,6 +38,18 @@ const boardSlice = createSlice({
       state.boardId = action.payload.boardId;
       state.name = action.payload.name;
     },
+    setCards(state, action: PayloadAction<Card[]>) {
+      state.columns.forEach((col) => {
+        col.cards = [];
+      });
+      action.payload.forEach((card) => {
+        const column = state.columns.find((c) => c.id === card.status);
+        if (column) {
+          column.cards.push(card);
+        }
+      });
+    },
+
     addCard(state, action: PayloadAction<{ columnId: string; card: Card }>) {
       const column = state.columns.find(
         (c) => c.id === action.payload.columnId,
@@ -66,5 +79,6 @@ const boardSlice = createSlice({
   },
 });
 
-export const { setBoard, addCard, updateCard, deleteCard } = boardSlice.actions;
+export const { setBoard, setCards, addCard, updateCard, deleteCard } =
+  boardSlice.actions;
 export default boardSlice.reducer;
