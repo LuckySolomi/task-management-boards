@@ -1,41 +1,34 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setBoard, setCards } from "./store/boardSlice";
 import { getBoard, getCards } from "./api/boardAPI";
-import type { RootState } from "./store/store";
 import Board from "./components/board/Board";
-
-const BOARD_ID = "fxbewg";
+import BoardLoader from "./components/boardLoader/BoardLoader";
+import styles from "./App.module.css";
 
 function App() {
   const dispatch = useDispatch();
-  const board = useSelector((state: RootState) => state.board);
 
-  useEffect(() => {
-    const loadBoard = async () => {
-      try {
-        const boardData = await getBoard(BOARD_ID);
+  const handleLoadBoard = async (boardId: string) => {
+    try {
+      const boardData = await getBoard(boardId);
 
-        dispatch(
-          setBoard({
-            boardId: boardData.boardId,
-            name: boardData.name,
-          }),
-        );
+      dispatch(
+        setBoard({
+          boardId: boardData.boardId,
+          name: boardData.name,
+        }),
+      );
 
-        const cards = await getCards(boardData.boardId);
-        dispatch(setCards(cards));
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    loadBoard();
-  }, [dispatch]);
+      const cards = await getCards(boardData.boardId);
+      dispatch(setCards(cards));
+    } catch (err) {
+      console.error("Failed to load board:", err);
+    }
+  };
 
   return (
-    <div>
-      <h1 style={{ padding: "16px" }}>{board.name}</h1>
+    <div className={styles.appContainer}>
+      <BoardLoader onLoad={handleLoadBoard} />
       <Board />
     </div>
   );

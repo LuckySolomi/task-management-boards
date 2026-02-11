@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+}
+
+.input {
+  width: 260px;
+  height: 36px;
+  padding: 0 12px;
+
+  border-radius: 8px;
+  border: 1px solid #dedfe5;
+
+  font-size: 14px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #00ae1c;
+  box-shadow: 0 0 0 2px rgba(0, 174, 28, 0.15);
+}
