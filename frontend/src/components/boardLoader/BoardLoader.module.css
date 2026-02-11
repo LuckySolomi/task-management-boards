@@ -1,12 +1,13 @@
 .wrapper {
   display: flex;
+  width: 100%;
   gap: 12px;
   align-items: center;
   padding: 20px;
 }
 
 .input {
-  width: 260px;
+  flex: 1;
   height: 36px;
   padding: 0 12px;
 
