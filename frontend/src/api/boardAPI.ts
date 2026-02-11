@@ -31,15 +31,14 @@ export const createCard = async (data: {
 };
 
 export const updateCard = async (
-  boardId: string,
+  cardId: string,
   data: { title?: string; description?: string },
 ) => {
-  const res = await fetch(`${API_URL}/cards/${boardId}`, {
+  const res = await fetch(`http://localhost:5000/cards/${cardId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) throw new Error("Failed to update card");
   return res.json();
 };

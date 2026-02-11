@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
+
 import {
   addCardThunk,
   updateCardThunk,
   deleteCardThunk,
 } from "../../store/cardsThunks";
+
 import { useAppDispatch } from "../../store/hooks";
 import Card from "../card/Card";
 import styles from "./Column.module.css";
 import type { Card as CardType } from "../../store/boardSlice";
+import EditCardModal from "../editCardModal/EditCardModal";
+import Notification from "../uiToolkit/notification/Notification";
 
 interface ColumnProps {
   column: {
@@ -20,7 +25,11 @@ interface ColumnProps {
 
 const Column = ({ column }: ColumnProps) => {
   const dispatch = useAppDispatch();
+
   const boardId = useSelector((state: RootState) => state.board.boardId);
+
+  const [editingCard, setEditingCard] = useState<CardType | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
 
   const handleAddCard = () => {
     if (!boardId) return;
@@ -34,20 +43,27 @@ const Column = ({ column }: ColumnProps) => {
   };
 
   const handleEdit = (card: CardType) => {
-    const newTitle = prompt("New title", card.title);
-    if (!newTitle) return;
+    setEditingCard(card);
+  };
+
+  const handleSave = (title: string, description: string) => {
+    if (!editingCard) return;
 
     dispatch(
       updateCardThunk({
-        boardId: card.id, // ← це і є ID карточки на бекенді
-        title: newTitle,
-        description: card.description,
+        cardId: editingCard.id,
+        title,
+        description,
       }),
     );
+
+    setEditingCard(null);
+    setNotification("Card updated");
   };
 
   const handleDelete = (card: CardType) => {
-    dispatch(deleteCardThunk(card.id)); // ← id = boardId на сервері
+    dispatch(deleteCardThunk(card.id));
+    setNotification("Card deleted");
   };
 
   return (
@@ -63,7 +79,7 @@ const Column = ({ column }: ColumnProps) => {
           <Card
             key={card.id}
             card={{
-              boardId: card.id,
+              boardId: boardId!,
               title: card.title,
               description: card.description,
               column: card.column,
@@ -77,6 +93,21 @@ const Column = ({ column }: ColumnProps) => {
       <button className={styles.addButton} onClick={handleAddCard}>
         ＋ Add card
       </button>
+
+      {editingCard && (
+        <EditCardModal
+          initialTitle={editingCard.title}
+          initialDescription={editingCard.description}
+          onClose={() => setEditingCard(null)}
+          onSave={handleSave}
+        />
+      )}
+
+      {notification && (
+        <Notification onCloseClick={() => setNotification(null)}>
+          {notification}
+        </Notification>
+      )}
     </div>
   );
 };

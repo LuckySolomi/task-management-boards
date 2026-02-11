@@ -22,24 +22,25 @@ export const addCardThunk = createAsyncThunk(
 export const updateCardThunk = createAsyncThunk(
   "cards/update",
   async ({
-    boardId,
+    cardId,
     title,
     description,
   }: {
-    boardId: string;
+    cardId: string;
     title?: string;
     description?: string;
   }) => {
-    return updateCard(boardId, { title, description });
+    return updateCard(cardId, { title, description });
   },
 );
 
 export const deleteCardThunk = createAsyncThunk(
   "cards/delete",
-  async (boardId: string) => {
-    await fetch(`http://localhost:5000/cards/${boardId}`, {
+  async (cardId: string) => {
+    await fetch(`http://localhost:5000/cards/${cardId}`, {
       method: "DELETE",
     });
-    return boardId;
+
+    return cardId;
   },
 );

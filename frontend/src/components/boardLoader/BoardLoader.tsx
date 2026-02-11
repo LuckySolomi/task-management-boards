@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./BoardLoader.module.css";
-import Button from "../button/Button";
+import Button from "../uiToolkit/button/Button";
 
 type Props = {
   onLoad: (boardId: string) => void;
