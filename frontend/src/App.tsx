@@ -8,6 +8,8 @@ import styles from "./App.module.css";
 function App() {
   const dispatch = useDispatch();
 
+  //const BOARD_ID = "fxbewg";
+
   const handleLoadBoard = async (boardId: string) => {
     try {
       const boardData = await getBoard(boardId);

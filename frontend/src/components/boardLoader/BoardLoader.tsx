@@ -9,6 +9,10 @@ type Props = {
 function BoardLoader({ onLoad }: Props) {
   const [boardId, setBoardId] = useState("");
 
+  const handleSubmit = () => {
+    if (!boardId.trim()) return;
+    onLoad(boardId);
+  };
   return (
     <div className={styles.wrapper}>
       <input
@@ -16,6 +20,11 @@ function BoardLoader({ onLoad }: Props) {
         placeholder="Enter board ID..."
         value={boardId}
         onChange={(e) => setBoardId(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSubmit();
+          }
+        }}
       />
 
       <Button
