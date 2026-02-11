@@ -31,6 +31,7 @@ function App() {
   return (
     <div className={styles.appContainer}>
       <BoardLoader onLoad={handleLoadBoard} />
+      <h2>Test board ID: fxbewg</h2>
       <Board />
     </div>
   );
