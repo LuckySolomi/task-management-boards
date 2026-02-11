@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBoard, setCards } from "./features/board/boardSlice";
+import { setBoard, setCards } from "./store/boardSlice";
 import { getBoard, getCards } from "./api/boardAPI";
 import type { RootState } from "./store/store";
 import Board from "./components/board/Board";
