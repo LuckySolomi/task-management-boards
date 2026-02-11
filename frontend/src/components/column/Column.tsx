@@ -1,6 +1,10 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-import { addCardThunk } from "../../store/cardsThunks";
+import {
+  addCardThunk,
+  updateCardThunk,
+  deleteCardThunk,
+} from "../../store/cardsThunks";
 import { useAppDispatch } from "../../store/hooks";
 import Card from "../card/Card";
 import styles from "./Column.module.css";
@@ -29,6 +33,23 @@ const Column = ({ column }: ColumnProps) => {
     );
   };
 
+  const handleEdit = (card: CardType) => {
+    const newTitle = prompt("New title", card.title);
+    if (!newTitle) return;
+
+    dispatch(
+      updateCardThunk({
+        boardId: card.id, // ← це і є ID карточки на бекенді
+        title: newTitle,
+        description: card.description,
+      }),
+    );
+  };
+
+  const handleDelete = (card: CardType) => {
+    dispatch(deleteCardThunk(card.id)); // ← id = boardId на сервері
+  };
+
   return (
     <div className={styles.column}>
       <h2>{column.title}</h2>
@@ -39,7 +60,17 @@ const Column = ({ column }: ColumnProps) => {
         )}
 
         {column.cards.map((card) => (
-          <Card key={card.id} card={card} />
+          <Card
+            key={card.id}
+            card={{
+              boardId: card.id,
+              title: card.title,
+              description: card.description,
+              column: card.column,
+            }}
+            onDelete={() => handleDelete(card)}
+            onEdit={() => handleEdit(card)}
+          />
         ))}
       </div>
 

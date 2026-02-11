@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { addCardThunk } from "./cardsThunks";
+import { addCardThunk, deleteCardThunk, updateCardThunk } from "./cardsThunks";
 
 interface BackendCard {
   _id: string;
@@ -66,6 +66,38 @@ const boardSlice = createSlice({
         }
       });
     },
+    updateCard(
+      state,
+      action: PayloadAction<{
+        cardId: string;
+        column: string;
+        title: string;
+        description?: string;
+      }>,
+    ) {
+      const { cardId, column, title, description } = action.payload;
+
+      const col = state.columns.find((c) => c.id === column);
+      if (!col) return;
+
+      const card = col.cards.find((c) => c.id === cardId);
+      if (!card) return;
+
+      card.title = title;
+      card.description = description;
+    },
+
+    deleteCard(
+      state,
+      action: PayloadAction<{ cardId: string; column: string }>,
+    ) {
+      const { cardId, column } = action.payload;
+
+      const col = state.columns.find((c) => c.id === column);
+      if (!col) return;
+
+      col.cards = col.cards.filter((card) => card.id !== cardId);
+    },
   },
 
   extraReducers: (builder) => {
@@ -82,6 +114,23 @@ const boardSlice = createSlice({
           column: newCard.column,
         });
       }
+    });
+    builder.addCase(updateCardThunk.fulfilled, (state, action) => {
+      const updated = action.payload;
+
+      state.columns.forEach((col) => {
+        const card = col.cards.find((c) => c.id === updated._id);
+        if (card) {
+          card.title = updated.title;
+          card.description = updated.description;
+        }
+      });
+    });
+
+    builder.addCase(deleteCardThunk.fulfilled, (state, action) => {
+      state.columns.forEach((col) => {
+        col.cards = col.cards.filter((c) => c.id !== action.payload);
+      });
     });
   },
 });
