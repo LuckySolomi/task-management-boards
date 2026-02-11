@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBoard } from "./features/board/boardSlice";
-import { getBoard } from "./api/boardAPI";
-import type { RootState } from "./app/store";
+import { setBoard, setCards } from "./features/board/boardSlice";
+import { getBoard, getCards } from "./api/boardAPI";
+import type { RootState } from "./store/store";
+import Board from "./components/board/Board";
 
-const BOARD_ID = "ueb0o3"; // встав свій boardId з бекенду
+const BOARD_ID = "fxbewg";
 
 function App() {
   const dispatch = useDispatch();
@@ -13,19 +14,29 @@ function App() {
   useEffect(() => {
     const loadBoard = async () => {
       try {
-        const data = await getBoard(BOARD_ID);
-        dispatch(setBoard({ boardId: data.boardId, name: data.name }));
+        const boardData = await getBoard(BOARD_ID);
+
+        dispatch(
+          setBoard({
+            boardId: boardData.boardId,
+            name: boardData.name,
+          }),
+        );
+
+        const cards = await getCards(boardData.boardId);
+        dispatch(setCards(cards));
       } catch (err) {
         console.error(err);
       }
     };
+
     loadBoard();
   }, [dispatch]);
 
   return (
     <div>
-      <h1>{board.name || "Loading..."}</h1>
-      {/* Тут потім будемо рендерити Board, Column, Card */}
+      <h1 style={{ padding: "16px" }}>{board.name}</h1>
+      <Board />
     </div>
   );
 }
