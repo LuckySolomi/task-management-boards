@@ -4,16 +4,11 @@ import { addCardThunk } from "../../store/cardsThunks";
 import { useAppDispatch } from "../../store/hooks";
 import Card from "../card/Card";
 import styles from "./Column.module.css";
-
-interface CardType {
-  id: string;
-  title: string;
-  description?: string;
-}
+import type { Card as CardType } from "../../store/boardSlice";
 
 interface ColumnProps {
   column: {
-    id: string;
+    id: "todo" | "inprogress" | "done";
     title: string;
     cards: CardType[];
   };
@@ -24,10 +19,12 @@ const Column = ({ column }: ColumnProps) => {
   const boardId = useSelector((state: RootState) => state.board.boardId);
 
   const handleAddCard = () => {
+    if (!boardId) return;
+
     dispatch(
       addCardThunk({
         boardId,
-        column: column.id as "todo" | "inprogress" | "done",
+        column: column.id,
       }),
     );
   };
