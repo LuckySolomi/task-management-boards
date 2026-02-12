@@ -44,3 +44,20 @@ export const deleteCardThunk = createAsyncThunk(
     return cardId;
   },
 );
+
+import { moveCard } from "../api/boardAPI";
+
+export const moveCardThunk = createAsyncThunk(
+  "cards/move",
+  async ({
+    cardId,
+    column,
+    order,
+  }: {
+    cardId: string;
+    column: "todo" | "inprogress" | "done";
+    order: number;
+  }) => {
+    return moveCard(cardId, column, order);
+  },
+);

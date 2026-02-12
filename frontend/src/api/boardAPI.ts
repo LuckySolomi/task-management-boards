@@ -42,3 +42,23 @@ export const updateCard = async (
 
   return res.json();
 };
+
+export const moveCard = async (
+  id: string,
+  column: "todo" | "inprogress" | "done",
+  order: number,
+) => {
+  const res = await fetch(`http://localhost:5000/cards/${id}/move`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ column, order }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to move card");
+  }
+
+  return res.json();
+};

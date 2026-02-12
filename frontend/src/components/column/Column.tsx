@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
-
+import { useDroppable } from "@dnd-kit/core";
 import {
   addCardThunk,
   updateCardThunk,
   deleteCardThunk,
 } from "../../store/cardsThunks";
-
 import { useAppDispatch } from "../../store/hooks";
 import Card from "../card/Card";
 import styles from "./Column.module.css";
@@ -25,11 +24,15 @@ interface ColumnProps {
 
 const Column = ({ column }: ColumnProps) => {
   const dispatch = useAppDispatch();
-
   const boardId = useSelector((state: RootState) => state.board.boardId);
 
   const [editingCard, setEditingCard] = useState<CardType | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+
+  // 👇 DROP ZONE
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id,
+  });
 
   const handleAddCard = () => {
     if (!boardId) return;
@@ -67,7 +70,13 @@ const Column = ({ column }: ColumnProps) => {
   };
 
   return (
-    <div className={styles.column}>
+    <div
+      ref={setNodeRef}
+      className={styles.column}
+      style={{
+        background: isOver ? "#f4f6ff" : undefined,
+      }}
+    >
       <h2>{column.title}</h2>
 
       <div className={styles.cards}>
@@ -79,7 +88,7 @@ const Column = ({ column }: ColumnProps) => {
           <Card
             key={card.id}
             card={{
-              boardId: boardId!,
+              cardId: card.id,
               title: card.title,
               description: card.description,
               column: card.column,

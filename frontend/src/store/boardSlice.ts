@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { addCardThunk, deleteCardThunk, updateCardThunk } from "./cardsThunks";
+import {
+  addCardThunk,
+  deleteCardThunk,
+  updateCardThunk,
+  moveCardThunk,
+} from "./cardsThunks";
 
 interface BackendCard {
   _id: string;
@@ -131,6 +136,25 @@ const boardSlice = createSlice({
       state.columns.forEach((col) => {
         col.cards = col.cards.filter((c) => c.id !== action.payload);
       });
+    });
+
+    builder.addCase(moveCardThunk.fulfilled, (state, action) => {
+      const updated = action.payload;
+
+      state.columns.forEach((col) => {
+        col.cards = col.cards.filter((c) => c.id !== updated._id);
+      });
+
+      const targetColumn = state.columns.find((c) => c.id === updated.column);
+
+      if (targetColumn) {
+        targetColumn.cards.push({
+          id: updated._id,
+          title: updated.title,
+          description: updated.description,
+          column: updated.column,
+        });
+      }
     });
   },
 });
