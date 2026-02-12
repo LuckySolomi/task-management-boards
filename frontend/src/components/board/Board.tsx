@@ -5,7 +5,7 @@ import { DndContext } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { useAppDispatch } from "../../store/hooks";
 import { moveCardThunk } from "../../store/cardsThunks";
-import styles from "./board.module.css";
+import styles from "./Board.module.css";
 
 const Board = () => {
   const columns = useSelector((state: RootState) => state.board.columns);
