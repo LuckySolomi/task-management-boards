@@ -1,13 +1,13 @@
-const API_URL = "http://localhost:5000";
+const BASE_URL = "https://task-management-boards-zbq6.onrender.com";
 
 export const getBoard = async (boardId: string) => {
-  const res = await fetch(`${API_URL}/boards/${boardId}`);
+  const res = await fetch(`${BASE_URL}/boards/${boardId}`);
   if (!res.ok) throw new Error("Failed to load board");
   return res.json();
 };
 
 export const getCards = async (boardId: string) => {
-  const res = await fetch(`${API_URL}/cards/${boardId}`);
+  const res = await fetch(`${BASE_URL}/cards/${boardId}`);
   if (!res.ok) throw new Error("Failed to load cards");
   return res.json();
 };
@@ -18,7 +18,7 @@ export const createCard = async (data: {
   title: string;
   description?: string;
 }) => {
-  const res = await fetch(`${API_URL}/cards`, {
+  const res = await fetch(`${BASE_URL}/cards`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
